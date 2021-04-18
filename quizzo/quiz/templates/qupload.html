@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+
+  <form method="POST">
+    {{ form.hidden_tag() }}
+      {{ form.question.label }} {{form.question }}<br>
+
+      {{ form.option1.label }} {{form.option1 }}<br>
+
+      {{ form.option2.label }} {{form.option2 }}<br>
+
+      {{ form.option3.label }} {{form.option3 }}<br>
+
+      {{ form.option4.label }} {{form.option4 }}<br>
+
+      {{ form.answer.label }} {{form.answer }}<br>
+
+      {{ form.submit(class="btn btn-danger") }}
+
+  </form>
+
+</div>
+{% endblock %}
