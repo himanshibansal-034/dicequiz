@@ -106,3 +106,8 @@ def results():
         db.session.commit()
         return redirect('quiz')
     return render_template('results.html', form=form)
+
+@app.route('/leaderboard')
+def leaderboard():
+    users=User.query.order_by(User.points.desc()).all()
+    return render_template('leaderboard.html',users=users)

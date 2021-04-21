@@ -1,5 +1,2 @@
-venv/
-*.sqlite
-.DS_Store
-__pycache__
-migrations/
+# created by virtualenv automatically
+*

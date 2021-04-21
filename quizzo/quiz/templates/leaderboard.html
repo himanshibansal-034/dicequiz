@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="table-responsive">
+    <table class="table text-white text-center table-bordered">
+      <thead>
+       <tr>
+         <th>Rank</th>
+         <th>Roll No.</th>
+         <th>Name</th>
+         <th>Points</th>
+       </tr>
+     </thead>
+    <tbody>
+      <tr>
+        {% set rank=namespace(value=1) %}
+        {% for user in users %}
+        <td>{{rank.value}}</td>
+        <td>{{user.roll}}</td>
+        <td>{{user.username}}</td>
+        <td>{{user.points}}</td>
+      </tr>
+      {% set rank.value=rank.value+1 %}
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
