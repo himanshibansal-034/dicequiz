@@ -33,8 +33,5 @@ class QuestionForm(FlaskForm):
     answer = StringField('answer',validators=[DataRequired()])
     submit = SubmitField('Submit')
 
-class Restart(FlaskForm):
-    submit=SubmitField('Restart')
-
 class RollForm(FlaskForm):
     submit = SubmitField('Roll')

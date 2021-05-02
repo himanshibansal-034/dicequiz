@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<div class="container text-center">
+  <span style="font-size:200%" class="timer" id="timer">Time Remaining -> {{ session["mins"] }} : {{session["secs"] }}</span>
+  <div class="progress">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{ session["exercise"] }}" aria-valuemin="0" aria-valuemax="100" id="progressBar"></div>
+  </div>
+</div>
+
 <div class="dice" style="margin-top:5%">
     <ol class="die-list even-roll" data-roll="1" id="die-1">
       <li class="die-item" data-side="1">
@@ -80,7 +88,7 @@
 <div class="container text-center" style="margin-top:4%">
   <a href="{{ url_for('quiz') }}" class="btn btn-outline-danger" role="button" aria-pressed="true"><h4>Roll Dice</h4></a>
 </div>
-<div class="container" style="margin-top: 5%">
+<div class="container" style="margin-top: 3%">
   <h4 class="text-warning">Q{{ ques.qid }}. {{ ques.question }}</h4>
     <div class="container" style="margin-top:4%">
       <div class="row row-cols-2">
@@ -102,6 +110,23 @@
 
 
   <script type="text/javascript">
+    const timerElement = document.getElementById("timer");
+    const progressBar = document.getElementById("progressBar");
+    var timerCounter = {{ session["exercise"] }};
+    const interval = setInterval(() => {
+      if (timerCounter === 0) {
+        window.location.href = "{{ url_for('results') }}";
+        clearInterval(interval);
+      }
+      timerCounter = timerCounter - 1;
+      perc=timerCounter*100/{{ session["max"] }};
+      progressBar.style.width = perc+"%";
+      mins=Math.floor(timerCounter/60);
+      secs=timerCounter-mins*60;
+      timerElement.innerText ="Time Remaining ->  "+mins+" : "+secs;
+    }, 1000);
+
+
   function rollDice() {
     const dice = [...document.querySelectorAll(".die-list")];
     dice.forEach(die => {

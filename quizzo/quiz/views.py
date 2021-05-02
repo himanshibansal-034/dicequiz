@@ -1,9 +1,13 @@
-from flask import render_template, request, Blueprint, redirect, url_for, flash, abort
+from flask import render_template, request, Blueprint, redirect, url_for, flash, abort, session
 from quiz import app,db
 from flask_login import login_user, login_required, logout_user, current_user
 from quiz.models import User, Question
-from quiz.forms import LoginForm, RegistrationForm, QuestionForm, Restart, RollForm
+from quiz.forms import LoginForm, RegistrationForm, QuestionForm, RollForm
 import math, random
+from datetime import datetime, timedelta
+
+start=datetime(2021, 5, 2, 18, 30, 00 )
+end=datetime(2021, 5, 2, 18, 40, 00)
 
 my_view=Blueprint('my_view',__name__)
 
@@ -68,8 +72,16 @@ def quesupload():
 @app.route('/quiz', methods=['GET','POST'])
 @login_required
 def quiz():
+    remaining=end-datetime.now()
+    inttime=int(remaining.total_seconds())
+    session["max"]=int((end-start).total_seconds())
+    session["mins"]=math.floor(inttime/60)
+    session["secs"]=inttime-session["mins"]*60;
+    session["exercise"]=inttime
     questions = Question.query.all()
-    if current_user.q_level>=3:
+    if current_user.q_level>=20:
+        return redirect('results')
+    if int(remaining.total_seconds())<=0:
         return redirect('results')
     ques=questions[current_user.q_level]
     current_user.points-=1
@@ -99,13 +111,7 @@ def check(ans,point):
 @app.route('/results', methods=['GET','POST'])
 @login_required
 def results():
-    form=Restart()
-    if form.validate_on_submit():
-        current_user.q_level=0
-        current_user.points=0
-        db.session.commit()
-        return redirect('quiz')
-    return render_template('results.html', form=form)
+    return render_template('results.html')
 
 @app.route('/leaderboard')
 def leaderboard():

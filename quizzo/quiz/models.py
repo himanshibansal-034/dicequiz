@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     q_level = db.Column(db.Integer, default=0)
-    points = db.Column(db.Integer, default=0)
+    points = db.Column(db.Integer, default=20)
 
     def __init__(self, roll, username, password):
         self.roll = roll
@@ -49,19 +49,3 @@ class Question(db.Model):
 
     def __repr__(self):
         return f"{self.question},{self.option1},{self.option2},{self.option3},{self.option4},{self.answer}"
-
-class Submission(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    quid=db.Column(db.String,  db.ForeignKey('question.qid'), nullable=False)
-    ans = db.Column(db.String, nullable=False)
-    correct = db.Column(db.Integer)
-
-    def __init__(self, by, quid, ans, correct):
-        self.by = current_user.id
-        self.quid=quid
-        self.ans = ans
-        self.correct = correct
-
-    def __repr__(self):
-        return f"{self.by},{self.quid},{self.ans},{self.correct}"
