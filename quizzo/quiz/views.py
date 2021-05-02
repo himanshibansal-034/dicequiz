@@ -6,8 +6,8 @@ from quiz.forms import LoginForm, RegistrationForm, QuestionForm, RollForm
 import math, random
 from datetime import datetime, timedelta
 
-start=datetime(2021, 5, 2, 18, 30, 00 )
-end=datetime(2021, 5, 2, 18, 40, 00)
+start=datetime(2021, 5, 2, 23, 35, 00 )
+end=datetime(2021, 5, 2, 23, 55, 00)
 
 my_view=Blueprint('my_view',__name__)
 
@@ -83,6 +83,8 @@ def quiz():
         return redirect('results')
     if int(remaining.total_seconds())<=0:
         return redirect('results')
+    if datetime.now()<start:
+        return redirect('/')
     ques=questions[current_user.q_level]
     current_user.points-=1
     db.session.commit()
@@ -115,5 +117,11 @@ def results():
 
 @app.route('/leaderboard')
 def leaderboard():
+    if datetime.now()<datetime(2021, 5, 16, 21, 00, 00):
+        return render_template("awaiting.html")
     users=User.query.order_by(User.points.desc()).all()
     return render_template('leaderboard.html',users=users)
+
+@app.route('/instructions')
+def instructions():
+    return render_template('instructions.html')
